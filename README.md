@@ -1,4 +1,4 @@
-tappy
+Tappy
 =====
 
 A JavaScript library for recording and comparing rhythms. The project page lives [here](http://tappy.pw).
