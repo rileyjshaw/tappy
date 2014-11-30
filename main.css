@@ -82,8 +82,8 @@ pre {
 
 code {
   font-family: Inconsolata, monospace;
-  padding-left: 0;
-  padding-right: 0; }
+  padding-left: 0 !important;
+  padding-right: 0 !important; }
   .instructions-hidden code {
     overflow: hidden; }
 
@@ -136,8 +136,6 @@ code {
 footer {
   margin-bottom: 2em;
   font-size: 16px; }
-  footer a {
-    top: 0.16em !important; }
 
 @-webkit-keyframes suddenlyAppear {
   0% {
