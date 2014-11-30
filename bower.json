@@ -1,0 +1,37 @@
+{
+  "name": "tappy",
+  "version": "0.1.0",
+  "homepage": "http://tappy.pw",
+  "authors": [
+    "rileyjshaw <i@rileyjshaw.com>"
+  ],
+  "description": "Record and compare rhythms",
+  "main": "dist/tappy.min.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "tap",
+    "click",
+    "password",
+    "music",
+    "rhythm",
+    "timing",
+    "tempo",
+    "security",
+    "sequence",
+    "keystroke",
+    "dynamics"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "web",
+    "web_dist",
+    ".sass-cache"
+  ]
+}

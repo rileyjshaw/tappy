@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Record and compare rhythms",
   "repository": "https://github.com/rileyjshaw/tappy",
-  "main": "dist/index.html",
+  "main": "dist/tappy.min.js",
   "scripts": {
     "test": "test/test.js"
   },

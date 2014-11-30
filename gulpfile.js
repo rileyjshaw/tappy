@@ -8,7 +8,7 @@ var argv = require('minimist')(process.argv.slice(2));
 var paths = {
   dist: './dist',
   scripts: {
-    entry: './app/js/main.js',
+    entry: './app/main.js',
     all: './app/**/*.js'
   },
   static: './web/static/**/*',
