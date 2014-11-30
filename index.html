@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Redirecting...</title>
+  <title>Tappy</title>
   <link rel="stylesheet" href="main.css">
-  <link href='http://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
   <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
   <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
@@ -21,21 +20,206 @@
   <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
   <meta name="msapplication-TileColor" content="#03a9f4">
   <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/dark.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/webfont/1.5.6/webfont.js"></script>
 </head>
-<body>
-  <p>Redirecting to play.tappy.pw</p>
+<body class="preload">
+  <div class="pulse"></div>
+  <!-- Lock by Edward Boatman from The Noun Project -->
+  <img class="padlock" src="lock.svg" alt="Padlock">
+
+  <h1>Tappy</h1>
+  <div class="instructions">
+    <p>is a node.js library for recording and comparing rhythms. It can be used for <a href="http://play.tappy.pw">games</a> and for more <a href="http://en.wikipedia.org/wiki/Keystroke_dynamics">serious things</a>.</p>
+    <p>It's hosted on <a href="https://github.com/rileyjshaw/tappy">GitHub</a>, <a href="https://www.npmjs.org/package/tappy">npm</a>, <a href="http://bower.io/">bower</a>, and <a href="//cdn.jsdelivr.net/tappy/latest/mainfile">jsdelivr</a>.</p>
+  </div>
+  <div class="code-nonessential">
+    <pre><code class="language-bash">npm install tappy # or whatever</code></pre>
+  </div>
+  <div class="code">
+    <pre><code class="language-javascript">var tappy = require('tappy');</code></pre>
+  </div>
+  <div class="instructions">
+    <p>To record rhythms, create a new Rhythm object:</p>
+  </div>
+  <div class="code">
+    <pre><code class="language-javascript">var password = new tappy.Rhythm();</code></pre>
+  </div>
+  <div class="instructions">
+    <p>...and call its <code class="language-javascript">tap()</code> method at each beat:</p>
+  </div>
+  <div class="code">
+    <pre><code class="language-javascript">function tapThat () { password.tap(); }
+window.addEventListener('click', tapThat, false);</code></pre>
+  </div>
+  <div class="code-hidden" aria-hidden>
+    <pre><code class="language-javascript">var i = 7;
+while (i--) password.tap();</code></pre>
+  </div>
+  <div class="instructions">
+    <p>Call <code class="language-javascript">done()</code> when you're done recording.</p>
+  </div>
+  <div class="code">
+    <pre><code class="language-javascript">if (password.length === 7) password.done();</code></pre>
+  </div>
+  <div class="instructions">
+    <p>As you might have noticed, Rhythm objects have a <code class="language-javascript">length</code> attribute. They also have a <code class="language-javascript">playback()</code> method that accepts a callback and a multiplier.</p>
+  </div>
+  <div class="code">
+    <pre><code class="language-javascript">password.playback(function (i) {
+  console.log('Tap number ' + i);
+}, 2);
+// the multiplier is optional; here it's playing
+// the Rhythm back 2x slower than the original</code></pre>
+  </div>
+  <div class="instructions">
+    <p>To compare two rhythms, pass them into <code class="language-javascript">tappy.compare()</code>:</p>
+  </div>
+  <div class="code-hidden" aria-hidden>
+    <pre><code class="language-javascript">// all Rhythm methods are chainable
+var newPassword = new tappy.Rhythm().tap().tap();
+newPassword.tap().tap().tap().tap().tap().done();</code></pre>
+  </div>
+  <div class="code">
+    <pre><code class="language-javascript">// returns a confidence value from 0 to 1 (1 === exact match)
+tappy.compare(password, newPassword, true);
+// the third argument is optional; if set to true it matches
+// rhythms played at different tempos. It's useful for cases
+// like the <a class="internal" href="http://play.tappy.pw">lyrics game</a>, where players may slow down when
+// focusing. By default, compare() matches tempo and rhythm;
+// this works well for <a class="internal" href="http://en.wikipedia.org/wiki/Keystroke_dynamics">keystroke dynamics analysis</a> etc.</code></pre>
+  </div>
+  <div class="instructions">
+    <p>Tappy works on the client and the server:</p>
+  </div>
+  <div class="code">
+    <pre><code class="language-javascript">// if a Rhythm object is stringified,
+// eg. you need to pass it to a server
+var stringified = JSON.stringify(password);
+
+// it can be easily reconstructed by passing
+// the raw object into the Rhythm constructor
+var raw = JSON.parse(stringified);
+var recovered = new tappy.Rhythm(raw);</code></pre>
+  </div>
+  <div class="instructions">
+    <p>Rhythms can be merged with <code class="language-javascript">tappy.average()</code> to eliminate timing anomalies:</p>
+  </div>
+  <div class="code">
+    <pre><code class="language-javascript">// accepts any number of Rhythms
+var steady = tappy.average(password, newPassword, recovered);
+
+// it even works with rhythms that have already been averaged
+var intermediate = tappy.average(password, newPassword);
+var steady2 = tappy.average(intermediate, recovered);
+
+alert(tappy.compare(steady, steady2));</code></pre>
+  </div>
+  <div class="instructions">
+    <p>There are a few more tricks up Tappy's sleeve:</p>
+  </div>
+  <div class="code">
+    <pre><code class="language-javascript">// the Rhythm constructor can accept an array of ms
+// time intervals between notes. For example, four
+// quarter-notes followed by four half-notes looks like:
+var preset = new tappy.Rhythm([1, 1, 1, 1, 2, 2, 2]);
+// since there are 8 notes, we input 7 inter-note intervals
+    </code></pre>
+  </div>
+  <div class="instructions">
+    <p>That's all there is to it! Have fun.</p>
+  </div>
+  <button class="toggle fa-eye-slash"></button>
+
+  <footer>
+    <p>Created with ❤ by <a href="http://rileyjshaw.com">rileyjshaw</a>. Inspired by <a href="https://codepen.io/fbrz" target="_blank">Fabrizio Bianchi</a> & <a href="github sources" target="_blank">others</a>.</p>
+  </footer>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
   <script>
-    window.location.replace('http://play.tappy.pw');
-  </script>
-  <script>
+    // balance-text (hopefully he accepts my pull-request soon...)
+    !function(a,b){"use strict";var c=function(a,b,c){var d;return function(){function g(){c||a.apply(e,f),d=null}var e=this,f=arguments;d?clearTimeout(d):c&&a.apply(e,f),d=setTimeout(g,b||100)}};jQuery.fn[b]=function(a){return a?this.bind("resize",c(a)):this.trigger(b)}}(jQuery,"smartresize"),function(a){"use strict";function d(){this.reset()}function k(){a(".balance-text").balanceText()}var b=document.documentElement.style,c=b.textWrap||b.WebkitTextWrap||b.MozTextWrap||b.MsTextWrap||b.OTextWrap;d.prototype.reset=function(){this.index=0,this.width=0};var e=function(a,b){for(var e,c=/\s(?![^<]*>)/g,d=[];null!==(e=c.exec(a));)d.push(e.index);return-1!==d.indexOf(b)},f=function(b){b.find('br[data-owner="balance-text"]').replaceWith(" ");var c=b.find('span[data-owner="balance-text"]');if(c.length>0){var d="";c.each(function(){d+=a(this).text(),a(this).remove()}),b.html(d)}},g=function(a){return b=a.get(0).currentStyle||window.getComputedStyle(a.get(0),null),"justify"===b.textAlign},h=function(b,c,d){c=a.trim(c);var e=c.split(" ").length;if(c+=" ",2>e)return c;var f=a("<span></span>").html(c);b.append(f);var g=f.width();f.remove();var h=Math.floor((d-g)/(e-1));return f.css("word-spacing",h+"px").attr("data-owner","balance-text"),a("<div></div>").append(f).html()},i=function(a,b){return 0===b||b===a.length||e(a,b-1)&&!e(a,b)},j=function(a,b,c,d,e,f,g){for(var h;;){for(;!i(b,f);)f+=e;if(a.html(b.substr(0,f)),h=a.width(),0>e?d>=h||0>=h||0===f:h>=d||h>=c||f===b.length)break;f+=e}g.index=f,g.width=h};a.fn.balanceText=function(){return c?this:this.each(function(){var b=a(this),c=5e3;f(b);var e="";b.attr("style")&&b.attr("style").indexOf("line-height")>=0&&(e=b.css("line-height")),b.css("line-height","normal");var i=b.width(),k=b.height(),l=b.css("white-space"),m=b.css("float"),n=b.css("display"),o=b.css("position");b.css({"white-space":"nowrap","float":"none",display:"inline",position:"static"});var p=b.width(),q=b.height(),r="pre-wrap"===l?0:q/4;if(i>0&&p>i&&c>p){for(var s=b.html(),t="",u="",v=g(b),w=Math.round(k/q),x=w;x>1;){var y=Math.round((p+r)/x-r),z=Math.round((s.length+1)/x)-1,A=new d;j(b,s,i,y,-1,z,A);var B=new d;z=A.index,j(b,s,i,y,1,z,B),A.reset(),z=B.index,j(b,s,i,y,-1,z,A);var C;C=0===A.index?B.index:i<B.width||A.index===B.index?A.index:Math.abs(y-A.width)<Math.abs(B.width-y)?A.index:B.index,u=s.substr(0,C),v?t+=h(b,u,i):(t+=u.replace(/\s$/,""),t+='<br data-owner="balance-text" />'),s=s.substr(C),x--,b.html(s),p=b.width()}v?b.html(t+h(b,s,i)):b.html(t+s)}b.css({position:o,display:n,"float":m,"white-space":l,"line-height":e})})},a(window).ready(k),a(window).smartresize(k)}(jQuery);
+
+    function balanceP () {
+      $('p').balanceText();
+    }
+
+    WebFont.load({
+      google: {
+        families: ['Inconsolata:400,700', 'Roboto Slab:300,700']
+      },
+      active: function () {
+        balanceP();
+        $(window).smartresize(balanceP);
+      }
+    });
+
+    function toggleClass (el, className) {
+      if (el.classList) {
+        el.classList.toggle(className);
+      } else {
+        var classes = el.className.split(' ');
+        var existingIndex = classes.indexOf(className);
+
+        if (existingIndex >= 0)
+          classes.splice(existingIndex, 1);
+        else
+          classes.push(className);
+
+        el.className = classes.join(' ');
+      }
+    }
+
+    function createFullRunnable (nodeList) {
+      var div = document.createElement('div');
+      var pre = document.createElement('pre');
+      var code = document.createElement('code');
+      var numNodes = nodeList.length;
+
+      div.className = 'fullRunnable';
+      code.className = nodeList[0].className;
+
+      for (var i = 0, _len = numNodes - 1; i < _len; i++) {
+        code.innerHTML += nodeList[i].innerHTML + '\n\n';
+      }
+
+      code.innerHTML += nodeList[_len].innerHTML;
+
+      $(nodeList[0]).parent().parent().addClass('code-first');
+      $(nodeList[numNodes - 1]).parent().parent().addClass('code-last');
+
+      pre.appendChild(code);
+      div.appendChild(pre);
+      return div;
+    }
+
+    var body = document.body;
+    var toggle = document.querySelector('.toggle');
+    var fullRunnable = createFullRunnable(document.querySelectorAll('.code code, .code-hidden code'));
+
+    body.insertBefore(fullRunnable, document.querySelector('.code-first'));
+    hljs.initHighlightingOnLoad();
+    toggle.addEventListener('click', function () {
+      toggleClass(body, 'instructions-hidden');
+      toggleClass(toggle, 'fa-eye');
+      toggleClass(toggle, 'fa-eye-slash');
+    }, false);
+    window.addEventListener('load', function () {
+      toggleClass(body, 'preload');
+    }, false);
+
+    // Google analytics
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
     ga('create', 'UA-49939229-7', 'auto');
     ga('require', 'displayfeatures');
     ga('send', 'pageview');
+
   </script>
 </body>
 </html>
