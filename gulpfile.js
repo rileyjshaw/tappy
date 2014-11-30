@@ -31,29 +31,28 @@ gulp.task('scripts', ['lint'], function () {
     .pipe(gulp.dest(paths.dist))
     .pipe($.rename('tappy.min.js'))
     .pipe($.streamify( $.uglify() ))
-    .pipe(gulp.dest(paths.dist))
+    .pipe(gulp.dest(paths.dist));
 });
 
 gulp.task('sass', function () {
   return gulp.src(paths.stylesheets)
     .pipe($.rubySass({ "sourcemap=none": true }))
     .pipe($.autoprefixer())
-    .pipe(gulp.dest(paths.staticDir))
+    .pipe(gulp.dest(paths.staticDir));
 });
 
-gulp.task('web', ['sass'], function () {
+gulp.task('buildWeb', ['sass'], function () {
   return gulp.src(paths.static)
-    .pipe(gulp.dest(paths.webDist))
+    .pipe(gulp.dest(paths.webDist));
 });
 
 gulp.task('watch', function () {
   gulp.watch([paths.scripts.all], ['lint', 'scripts', 'test']);
-  gulp.watch([paths.stylesheets, paths.static], ['web']);
 });
 
-gulp.task('deploy', ['web'], function () {
-  gulp.src(paths.webDist + '/**/*')
-    .pipe($.ghPages('https://github.com/rileyjshaw/tappy.git', 'origin'));
+gulp.task('watchWeb', function () {
+  gulp.watch([paths.scripts.all], ['lint', 'scripts', 'test']);
+  gulp.watch([paths.stylesheets, paths.static], ['buildWeb']);
 });
 
 gulp.task('webserver', function () {
@@ -70,4 +69,9 @@ gulp.task('test', ['scripts'], function () {
     .pipe($.mocha({reporter: 'nyan'}));
 });
 
-gulp.task( 'default', [ 'lint', 'scripts', 'test', 'sass', 'web', 'webserver', 'watch' ] );
+gulp.task( 'default', [ 'lint', 'scripts', 'test', 'watch' ] );
+gulp.task( 'web', [ 'sass', 'buildWeb', 'webserver', 'watchWeb' ] );
+gulp.task('deploy', ['buildWeb'], function () {
+  gulp.src(paths.webDist + '/**/*')
+    .pipe($.ghPages('https://github.com/rileyjshaw/tappy.git', 'origin'));
+});

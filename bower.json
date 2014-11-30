@@ -27,11 +27,10 @@
   ],
   "license": "MIT",
   "ignore": [
-    "**/.*",
+    "**/.!(jshintrc)",
     "node_modules",
     "bower_components",
     "web",
-    "web_dist",
-    ".sass-cache"
+    "web_dist"
   ]
 }
