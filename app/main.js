@@ -149,13 +149,15 @@ Rhythm.prototype.playback = function tappy_playback (cb, multiplier) {
 		}
 	}
 
+	var i, length, prevTap, taps;
+
 	if (typeof this._curTap === 'number') {
 		throw new Error('Can\'t call playback() before calling done()');
 	}
 
-	var i = 0;
-	var length = this.length;
-	var prevTap, taps = this._taps;
+	i = 0;
+	length = this.length;
+	taps = this._taps;
 
 	if (multiplier) {
 		taps = taps.map(function (tap) {
