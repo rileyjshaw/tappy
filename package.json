@@ -1,6 +1,6 @@
 {
   "name": "tappy",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Record and compare rhythms",
   "repository": "https://github.com/rileyjshaw/tappy",
   "main": "dist/tappy.min.js",

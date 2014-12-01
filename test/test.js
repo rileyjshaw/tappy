@@ -86,6 +86,17 @@ describe('Tappy', function () {
 		expect(tappy.compare(r1, r2)).to.equal(1);
 	});
 
+	it('should default to elastic comparisons', function () {
+		var r1 = new tappy.Rhythm([6000, 4]);
+		var r2 = new tappy.Rhythm([6000, 4]);
+		var r3 = new tappy.Rhythm([1500, 1]);
+
+		expect(tappy.compare(r1, r2), 'elastic, same tempo').to.equal(1);
+		expect(tappy.compare(r1, r3), 'elastic, different tempo').to.equal(1);
+		expect(tappy.compare(r1, r2, true), 'inelastic, same tempo').to.equal(1);
+		expect(tappy.compare(r1, r3, true), 'inelastic, different tempo').to.not.equal(1);
+	});
+
 	it('should treat batched average()s the same as intermediates', function () {
 		var r1 = new tappy.Rhythm([600, 700, 500, 400]);
 		var r2 = new tappy.Rhythm([620, 720, 480, 380]);

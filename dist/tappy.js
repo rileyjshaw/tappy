@@ -1,8 +1,8 @@
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.tappy=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var now = require('right-now');
 
-function compare (r1, r2, noTempo) {
-	var error, multiplier, length;
+function compare (r1, r2, inelastic) {
+	var error, multiplier, length, dur1, dur2, rHi, rLo;
 
 	if (typeof r1._tap === 'number' || typeof r2._tap === 'number') {
 		throw new Error('Can\'t compare Rhythms before calling done()');
@@ -10,31 +10,47 @@ function compare (r1, r2, noTempo) {
 
 	length = r1.length;
 	if (length !== r2.length) return false;
+	length--;
 
 	r1 = r1._taps;
 	r2 = r2._taps;
 
-	if (noTempo === true) {
+	if (!inelastic) {
+		dur1 = r1.reduce(function (acc, tap) { return acc + tap; });
+		dur2 = r2.reduce(function (acc, tap) { return acc + tap; });
+
+		if (dur1 > dur2) {
+			rHi = r1;
+			rLo = r2;
+		} else {
+			rHi = r2;
+			rLo = r1;
+		}
+
 		// calculate the multiplier
-		multiplier = r1.map(function (tap, i) {
-			return tap / r2[i];
+		multiplier = rHi.map(function (tHi, i) {
+			var tLo = rLo[i];
+			return tLo / tHi;
 		}).reduce(function (acc, ratio) {
 			return acc + ratio;
 		}) / length;
 
-		// normalize r2
-		r2 = r2.map(function (tap) {
+		// normalize rHi
+		rHi = rHi.map(function (tap) {
 			return tap * multiplier;
 		});
+	} else {
+		rHi = r1;
+		rLo = r2;
 	}
 
 	// 1 - mean absolute error normalized to [0, 1]
-	return 1 - r1.reduce(function (acc, tap1, i) {
-		var tap2 = r2[i];
-		var hi = Math.max(tap1, tap2);
-		var lo = Math.min(tap1, tap2);
+	return 1 - rHi.reduce(function (acc, tap1, i) {
+		var tap2 = rLo[i];
+		var tHi = Math.max(tap1, tap2);
+		var tLo = Math.min(tap1, tap2);
 
-		return acc + (hi - lo) / hi;
+		return acc + (tHi - tLo) / tHi;
 	}, 0) / length;
 }
 

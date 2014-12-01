@@ -1,7 +1,7 @@
 var now = require('right-now');
 
-function compare (r1, r2, noTempo) {
-	var error, multiplier, length;
+function compare (r1, r2, inelastic) {
+	var error, multiplier, length, dur1, dur2, rHi, rLo;
 
 	if (typeof r1._tap === 'number' || typeof r2._tap === 'number') {
 		throw new Error('Can\'t compare Rhythms before calling done()');
@@ -9,31 +9,47 @@ function compare (r1, r2, noTempo) {
 
 	length = r1.length;
 	if (length !== r2.length) return false;
+	length--;
 
 	r1 = r1._taps;
 	r2 = r2._taps;
 
-	if (noTempo === true) {
+	if (!inelastic) {
+		dur1 = r1.reduce(function (acc, tap) { return acc + tap; });
+		dur2 = r2.reduce(function (acc, tap) { return acc + tap; });
+
+		if (dur1 > dur2) {
+			rHi = r1;
+			rLo = r2;
+		} else {
+			rHi = r2;
+			rLo = r1;
+		}
+
 		// calculate the multiplier
-		multiplier = r1.map(function (tap, i) {
-			return tap / r2[i];
+		multiplier = rHi.map(function (tHi, i) {
+			var tLo = rLo[i];
+			return tLo / tHi;
 		}).reduce(function (acc, ratio) {
 			return acc + ratio;
 		}) / length;
 
-		// normalize r2
-		r2 = r2.map(function (tap) {
+		// normalize rHi
+		rHi = rHi.map(function (tap) {
 			return tap * multiplier;
 		});
+	} else {
+		rHi = r1;
+		rLo = r2;
 	}
 
 	// 1 - mean absolute error normalized to [0, 1]
-	return 1 - r1.reduce(function (acc, tap1, i) {
-		var tap2 = r2[i];
-		var hi = Math.max(tap1, tap2);
-		var lo = Math.min(tap1, tap2);
+	return 1 - rHi.reduce(function (acc, tap1, i) {
+		var tap2 = rLo[i];
+		var tHi = Math.max(tap1, tap2);
+		var tLo = Math.min(tap1, tap2);
 
-		return acc + (hi - lo) / hi;
+		return acc + (tHi - tLo) / tHi;
 	}, 0) / length;
 }
 
