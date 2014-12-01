@@ -85,10 +85,11 @@ newPassword.tap().tap().tap().tap().tap().done();</code></pre>
   <div class="code">
     <pre><code class="language-javascript">// returns a confidence value from 0 to 1 (1 === exact match)
 tappy.compare(password, newPassword, true);
-// the third argument is optional; if set to true it matches
-// rhythms played at different tempos. It's useful for cases
-// like the <a class="internal" href="http://play.tappy.pw">lyrics game</a>, where players may slow down when
-// focusing. By default, compare() matches tempo and rhythm;
+// the third argument is optional; by default, compare() elastically
+// matches rhythms played at different tempos. It's useful for cases
+// like the <a class="internal" href="http://play.tappy.pw">lyrics game</a>, where players may slow down when focusing.
+//
+// A truthy third argument makes compare() match tempo <em>and</em> rhythm;
 // this works well for <a class="internal" href="http://en.wikipedia.org/wiki/Keystroke_dynamics">keystroke dynamics analysis</a> etc.</code></pre>
   </div>
   <div class="instructions">
