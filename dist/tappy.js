@@ -1,6 +1,9 @@
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.tappy=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var now = require('right-now');
 
+// helper function for reduce()
+function sum (a, b) { return a + b; }
+
 function compare (r1, r2, inelastic) {
 	var error, multiplier, length, dur1, dur2, rHi, rLo;
 
@@ -56,7 +59,7 @@ function compare (r1, r2, inelastic) {
 
 function average () {
 	var args = Array.prototype.slice.call(arguments);
-	var r0, w0, length, weight, taps;
+	var r0, w0, length, duration, taps, weight;
 
 	if (args.some(function (a) { return typeof a._tap === 'number'; })) {
 		throw new Error('Can\'t combine Rhythms before calling done()');
@@ -81,17 +84,19 @@ function average () {
 		}, 0)) / weight;
 	});
 
-	return new Rhythm({
+	return Object.freeze(new Rhythm({
 		length: length,
+		duration: taps.reduce(sum),
 		_taps: taps,
 		_weight: weight
-	});
+	}));
 }
 
 function Rhythm (obj) {
 	// checks null and undefined
 	if (obj == null) {
 		this.length   = 0;
+		this.duration = 0;
 		this._prevTap = 0;
 		this._curTap  = 0;
 		this._taps    = [];
@@ -105,23 +110,28 @@ function Rhythm (obj) {
 		}
 
 		this.length   = obj.length + 1;
+		this.duration = obj.reduce(sum);
 		this._taps    = obj;
-		this._weight   = 1;
+		this._weight  = 1;
+		Object.freeze(this);
 	} else {
-		if (!obj.hasOwnProperty('length') ||
-		    !obj.hasOwnProperty('_taps')  ||
-		    !obj.hasOwnProperty('_weight')) {
+		if (!obj.hasOwnProperty('length')  ||
+		    !obj.hasOwnProperty('_taps')   ||
+		    !obj.hasOwnProperty('_weight') ||
+		    !obj.hasOwnProperty('duration')) {
 			throw new Error('Object passed to Rhythm is poorly formatted');
 		}
 
 		this.length   = obj.length;
+		this.duration = obj.duration;
 		this._taps    = obj._taps;
 		this._weight  = obj._weight;
+		Object.freeze(this);
 	}
 }
 
 Rhythm.prototype.tap = function tappy_tap () {
-	var prevTap, curTap = this._curTap;
+	var interval, prevTap, curTap = this._curTap;
 
 	if (typeof curTap === 'undefined') {
 		throw new Error('Can\'t call tap() after calling done()');
@@ -131,7 +141,9 @@ Rhythm.prototype.tap = function tappy_tap () {
 	curTap = this._curTap = now();
 
 	if (prevTap) {
-		this._taps.push((curTap - prevTap) || 1);
+		interval = (curTap - prevTap) || 1;
+		this._taps.push(interval);
+		this.duration += interval;
 	}
 
 	this.length++;
@@ -151,41 +163,36 @@ Rhythm.prototype.done = function tappy_done () {
 	return this;
 };
 
-Rhythm.prototype.playback = function tappy_playback (cb, multiplier) {
+Rhythm.prototype.playback = function tappy_playback (cb, done, multiplier) {
 	function nextCb () {
-		var diff, time;
+		var diff, next = taps.pop();
 
-		cb(i);
-		if (i < length) {
-			time = now();
-			diff = time - prevTap - taps[i];
+		cb(i++);
 
-			setTimeout(nextCb, taps[++i] - diff);
-
-			prevTap = time;
-		}
+		// no fear of typecasting errors since intervals must be > 0
+		if (next) {
+			// actual elapsed minus expected elapsed
+			diff = now() - start - elapsed;
+			setTimeout(nextCb, next - diff);
+			elapsed += next;
+		} else if (typeof done === 'function') done();
 	}
 
-	var i, length, prevTap, taps;
+	var i, length, taps, start, elapsed;
 
 	if (typeof this._curTap === 'number') {
 		throw new Error('Can\'t call playback() before calling done()');
 	}
 
-	i = 0;
+	i = elapsed = 0;
 	length = this.length;
-	taps = this._taps;
+	taps = this._taps.slice().reverse();
 
-	if (multiplier) {
-		taps = taps.map(function (tap) {
-			return tap * multiplier;
-		});
-	}
+	if (multiplier)
+		taps = taps.map(function (tap) { return tap * multiplier; });
 
-	prevTap = now();
-
+	start = now();
 	nextCb();
-
 	return this;
 };
 

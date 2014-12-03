@@ -1,9 +1,7 @@
-// incomplete coverage!
-// TODO: playback
 var expect = require('chai').expect;
 var tappy = require('../dist/tappy.min.js');
 
-describe('Tappy', function () {
+describe('Unit Tests', function () {
 	it('should have the proper API', function () {
 		expect(tappy.average).to.be.a('function');
 		expect(tappy.compare).to.be.a('function');
@@ -20,16 +18,47 @@ describe('Tappy', function () {
 	});
 
 	it('should record proper lengths', function () {
-		var r = new tappy.Rhythm();
+		var r1 = new tappy.Rhythm();
+		var r2 = new tappy.Rhythm([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+		var r3 = new tappy.average(r2, r2);
+		var r4 = new tappy.Rhythm({
+			length: 6,
+			duration: 6,
+			_taps: [1, 1, 1, 1, 1, 1],
+			_weight: 1
+		});
 
-		r.tap().tap().tap();
-		expect(r).to.have.length(3);
+		r1.tap().tap().tap();
+		expect(r1).to.have.length(3);
 
-		r.tap().tap().done();
-		expect(r).to.have.length(5);
+		r1.tap().tap().done();
+		expect(r1).to.have.length(5);
 
-		r.length = 42;
-		expect(r).to.have.length(5);
+		r1.length = 42;
+		expect(r1).to.have.length(5);
+
+		expect(r2).to.have.length(11);
+		expect(r3).to.have.length(11);
+
+		expect(r4).to.have.length(6);
+	});
+
+	it('should record proper durations', function () {
+		var r1 = new tappy.Rhythm([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+		var r2 = new tappy.Rhythm([3, 3, 3, 3, 3, 3, 3, 3, 3, 3]);
+		var r3 = new tappy.average(r1, r2);
+		var r4 = new tappy.Rhythm({
+			length: 6,
+			duration: 294,
+			_taps: [19, 79, 19, 79, 19, 79],
+			_weight: 1
+		});
+
+		expect(r1).to.have.property('duration', 10);
+		r1.duration = 42;
+		expect(r1).to.have.property('duration', 10);
+		expect(r3).to.have.property('duration', 20);
+		expect(r4).to.have.property('duration', 294);
 	});
 
 	it('should not allow done() to be called with < 2 taps', function () {
@@ -173,5 +202,29 @@ describe('Tappy', function () {
 		expect(recovered, 'recovered length').to.have.length(2);
 
 		expect(tappy.compare(r, recovered), 'comparison').to.equal(1);
+	});
+
+	it('should call the playback cb a correct number of times', function (done) {
+		// tap 5 times
+		var r = new tappy.Rhythm().tap().tap().tap().tap().tap().done();
+		var count = 0;
+
+		r.playback(
+			function () { count++; },
+			function () {
+				expect(count).to.equal(5);
+				done();
+			}
+		);
+	});
+
+	it('should provide the correct arguments to playback cb', function (done) {
+		// tap 5 times
+		var r = new tappy.Rhythm().tap().tap().tap().tap().tap().done();
+		var expected = 0;
+
+		r.playback(function (i) {
+			expect(expected++).to.equal(i);
+		}, done);
 	});
 });
