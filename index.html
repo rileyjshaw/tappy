@@ -69,16 +69,17 @@ while (i--) password.tap();</code></pre>
   </div>
   <div class="code">
     <pre><code class="language-javascript">var pwDuration = password.duration; // in ms
-// accepts a callback to be run at each tap,
-// an optional callback for when the Rhythm
+
+// playback() accepts a callback to run at each
+// tap, an optional callback for when the Rhythm
 // finishes, and an optional multiplier
 password.playback(
   function (i) { console.log('Tap number ' + i); },
   function ( ) { console.log('Finished Rhythm'); },
   2
 );
-// the multiplier makes the Rhythm play 2x slower
-// than the original</code></pre>
+// the multiplier above makes the Rhythm play 2x
+// slower than the original</code></pre>
   </div>
   <div class="instructions">
     <p>To compare two rhythms, pass them into <code class="language-javascript">tappy.compare()</code>:</p>
