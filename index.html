@@ -65,10 +65,10 @@ while (i--) password.tap();</code></pre>
     <pre><code class="language-javascript">if (password.length === 7) password.done();</code></pre>
   </div>
   <div class="instructions">
-    <p>As you might have noticed, Rhythm objects have a <code class="language-javascript">length</code> attribute. They also have a <code class="language-javascript">duration</code> attribute (in ms) and a <code class="language-javascript">playback()</code> method.</p>
+    <p>As you might have noticed, Rhythm objects have a <code class="language-javascript">length</code> attribute. They also have a <code class="language-javascript">duration</code> attribute and a <code class="language-javascript">playback()</code> method.</p>
   </div>
   <div class="code">
-    <pre><code class="language-javascript">
+    <pre><code class="language-javascript">var pwDuration = password.duration; // in ms
 // accepts a callback to be run at each tap,
 // an optional callback for when the Rhythm
 // finishes, and an optional multiplier
