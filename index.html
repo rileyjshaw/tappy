@@ -65,14 +65,20 @@ while (i--) password.tap();</code></pre>
     <pre><code class="language-javascript">if (password.length === 7) password.done();</code></pre>
   </div>
   <div class="instructions">
-    <p>As you might have noticed, Rhythm objects have a <code class="language-javascript">length</code> attribute. They also have a <code class="language-javascript">playback()</code> method that accepts a callback and a multiplier.</p>
+    <p>As you might have noticed, Rhythm objects have a <code class="language-javascript">length</code> attribute. They also have a <code class="language-javascript">duration</code> attribute (in ms) and a <code class="language-javascript">playback()</code> method.</p>
   </div>
   <div class="code">
-    <pre><code class="language-javascript">password.playback(function (i) {
-  console.log('Tap number ' + i);
-}, 2);
-// the multiplier is optional; here it's playing
-// the Rhythm back 2x slower than the original</code></pre>
+    <pre><code class="language-javascript">
+// accepts a callback to be run at each tap,
+// an optional callback for when the Rhythm
+// finishes, and an optional multiplier
+password.playback(
+  function (i) { console.log('Tap number ' + i); },
+  function ( ) { console.log('Finished Rhythm'); },
+  2
+);
+// the multiplier makes the Rhythm play 2x slower
+// than the original</code></pre>
   </div>
   <div class="instructions">
     <p>To compare two rhythms, pass them into <code class="language-javascript">tappy.compare()</code>:</p>
