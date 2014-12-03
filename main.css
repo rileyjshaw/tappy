@@ -32,14 +32,18 @@ a:not(.internal) {
   color: #fff;
   color: transparent;
   text-shadow: 0 -0.1em #fff, 0.08em -0.1em 0 #03a9f4, 0 0, -0.08em -0.1em 0 #03a9f4;
-  background: -webkit-linear-gradient(#9ad5f0, #9ad5f0) center 1.09em no-repeat;
-  background: linear-gradient(#9ad5f0, #9ad5f0) center 1.09em no-repeat;
+  background: -webkit-linear-gradient(#9ad5f0, #9ad5f0) center 84% no-repeat;
+  background: linear-gradient(#9ad5f0, #9ad5f0) center 84% no-repeat;
   background-size: 95% 2px;
   text-decoration: none;
   -webkit-transition: background-size 0.1s;
           transition: background-size 0.1s; }
   a:not(.internal):hover {
     background-size: 100% 2px; }
+  footer a:not(.internal) {
+    background-size: 95% 1px; }
+    footer a:not(.internal):hover {
+      background-size: 100% 1px; }
 
 .internal {
   color: #aaa; }
