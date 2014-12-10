@@ -66,6 +66,9 @@ var reallyReallyReallyLongLine = 'Zero Cool' + ', Acid Burn' + ', Lord Nikon' +
 ###[Lyrics game](http://play.tappy.pw)
 A music game: tap the rhythm of the lyrics displayed.
 
+###[Fingerprint](http://fingerprint.tappy.pw)
+A simple in-browser keystroke dynamics trainer.
+
 ___If you've built something with Tappy, let me know! I'd love to add it to this list.___
 
 ## License
