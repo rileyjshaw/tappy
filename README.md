@@ -1,6 +1,8 @@
 Tappy
 =====
 
+[![Build Status](https://travis-ci.org/rileyjshaw/tappy.svg?branch=master)](https://travis-ci.org/rileyjshaw/tappy)
+
 A JavaScript library for recording and comparing rhythms. The project page lives [here](http://tappy.pw).
 
 ## Installation
