@@ -6,7 +6,7 @@
   "homepage": "http://tappy.pw",
   "main": "dist/tappy.min.js",
   "scripts": {
-    "test": "test/test.js"
+    "test": "mocha"
   },
   "keywords": [
     "tap",
