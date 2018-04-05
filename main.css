@@ -95,14 +95,14 @@ code {
   background: #444; }
 
 .code {
-  -webkit-transition: margin 0.9s, padding 0.9s, opacity 0;
-          transition: margin 0.9s, padding 0.9s, opacity 0; }
+  -webkit-transition: margin 0.9s, padding 0.9s, opacity 0s;
+          transition: margin 0.9s, padding 0.9s, opacity 0s; }
   .code.code-last {
     margin-bottom: 0.64em; }
   .instructions-hidden .code {
     opacity: 0;
-    -webkit-transition: padding 0.9s, opacity 0 1s;
-            transition: padding 0.9s, opacity 0 1s; }
+    -webkit-transition: padding 0.9s, opacity 0s 1s;
+            transition: padding 0.9s, opacity 0s 1s; }
     .instructions-hidden .code.code-first {
       padding-top: 1em; }
 
