@@ -3,7 +3,7 @@ Tappy
 
 [![Build Status](https://travis-ci.org/rileyjshaw/tappy.svg?branch=master)](https://travis-ci.org/rileyjshaw/tappy)
 
-A JavaScript library for recording and comparing rhythms. The project page lives [here](http://tappy.pw).
+A JavaScript library for recording and comparing rhythms. The project page lives [here](https://rileyshaw.com/tappy).
 
 ## Installation
 Tappy can be installed using [npm](https://www.npmjs.org/package/tappy), [bower](http://bower.io/), or included from [jsdelivr](http://cdn.jsdelivr.net/tappy/latest/mainfile):
@@ -20,7 +20,7 @@ bower install tappy
 The library uses a [universal module definition](https://github.com/umdjs/umd), so it _should_ work with whatever system you're using.
 
 ## Usage
-For current docs, please visit [the project page](http://tappy.pw).
+For current docs, please visit [the project page](https://rileyjshaw.com/tappy).
 
 ## Contributing
 Pull-requests to the `/app` and `/test` directories are welcome. Please create an [issue](https://github.com/rileyjshaw/tappy/issues) if you plan on adding features, as it might be better suited to a plugin.
@@ -65,13 +65,13 @@ var reallyReallyReallyLongLine = 'Zero Cool' + ', Acid Burn' + ', Lord Nikon' +
 
 ## Examples
 
-###[Lyrics game](http://play.tappy.pw)
+###[Lyrics game](https://rileyjshaw.com/tappy-game)
 A music game: tap the rhythm of the lyrics displayed.
 
-###[Fingerprint](http://fingerprint.tappy.pw)
+###[Fingerprint](https://rileyjshaw.com/tappy-fingerprint)
 A simple in-browser keystroke dynamics trainer.
 
 ___If you've built something with Tappy, let me know! I'd love to add it to this list.___
 
 ## License
-Licensed under [MIT](https://github.com/rileyjshaw/tappy/blob/master/LICENSE). Created by [rileyjshaw](http://rileyjshaw.com/).
+Licensed under [MIT](https://github.com/rileyjshaw/tappy/blob/master/LICENSE). Created by [rileyjshaw](https://rileyjshaw.com/).
